@@ -53,15 +53,17 @@
                         {{ request.user.first_name|default:request.user.username }} {%endif%} <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i>Профиль</a>
-                        </li>
-                        <li class="divider"></li>
                         {% if request.user.is_authenticated %}
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Выйти</a>
+                        <li>
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline btn-link"><i class="fa fa-sign-out fa-fw"></i>Выйти</button>
+                            </form>
+                            
 
                         </li>
                         {% else %}
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Войти/ Регистрация</a>
+                        <li><a href="{% url 'login' %}"><i class="fa fa-sign-out fa-fw"></i> Войти/ Регистрация</a>
 
                         </li>
                         {% endif %}
