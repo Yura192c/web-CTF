@@ -30,15 +30,13 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    name = models.CharField(max_length=50, null=False, blank=False) #TODO delete
     telegram_username = models.CharField(max_length=500, blank=False,
                                          help_text="Юзернейм в телеграмме", unique=True)
     points_count = models.PositiveIntegerField(help_text="Количество очков", default=0)
     objects = CustomUserManager()
     tasks_count = models.PositiveIntegerField(help_text="Количество задач", default=0)
 
-
-    def __str__(self) -> str:
+    def __str__(self):
         return self.telegram_username
 
 
@@ -47,9 +45,6 @@ def validate_telegram_username_format(value):
     pattern = r'^@[\w]+$'
     if not re.match(pattern, value):
         raise ValidationError('Недопустимый формат telegram username. Используйте @ и буквы/цифры/подчеркивания.')
-
-
-
 
 
 @receiver(pre_save, sender=User)
