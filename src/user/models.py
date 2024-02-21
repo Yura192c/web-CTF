@@ -12,7 +12,6 @@ class CustomUserManager(BaseUserManager):
         """
         Создает и возвращает обычного пользователя с заданным именем пользователя и паролем.
         """
-
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
@@ -29,6 +28,16 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 
+class AuthorizedUsers(models.Model):
+    """
+    Список разрешенным телеграмм юзернеймов для регистрации
+    """
+    tg_username = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.tg_username
+
+
 class User(AbstractUser):
     telegram_username = models.CharField(max_length=500, blank=False,
                                          help_text="Юзернейм в телеграмме", unique=True)
@@ -41,7 +50,9 @@ class User(AbstractUser):
 
 
 def validate_telegram_username_format(value):
-    # Проверка формата telegram_username с использованием регулярного выражения
+    """
+    Проверка формата telegram_username
+    """
     pattern = r'^@[\w]+$'
     if not re.match(pattern, value):
         raise ValidationError('Недопустимый формат telegram username. Используйте @ и буквы/цифры/подчеркивания.')
@@ -49,9 +60,10 @@ def validate_telegram_username_format(value):
 
 @receiver(pre_save, sender=User)
 def validate_telegram_username(sender, instance, **kwargs):
-    # Проверка, что telegram_username находится в списке разрешенных значений
-    allowed_usernames = ["@username1", "@username2", "@username3"]  # Замените на свой список
+    """
+    Проверка, что telegram_username находится в списке разрешенных значений
+    """
+    allowed_usernames = list(AuthorizedUsers.objects.values_list('tg_username', flat=True))
     if instance.telegram_username not in allowed_usernames:
         raise ValueError(f"Недопустимый telegram username: {instance.telegram_username}. Регистрация запрещена.")
-
     validate_telegram_username_format(instance.telegram_username)
