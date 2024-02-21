@@ -48,7 +48,6 @@ def task(request, pk):
 
                 # Создаем объект Solution
                 solution = Solution.objects.create(user=user, task=task, points_earned=task.points)
-                print('*' * 10, task.id)
                 return redirect('task_list')
             else:
                 form = TaskAnswerForm()
