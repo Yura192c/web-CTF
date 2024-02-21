@@ -7,3 +7,7 @@ def leaderboard(request):
     return render(request, 'leaderboard.html', {
         'users_data': users_data
     })
+
+
+def my_custom_page_not_found_view(request, exception):
+    return render(request, '404.html')
