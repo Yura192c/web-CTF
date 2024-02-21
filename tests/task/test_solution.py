@@ -1,9 +1,16 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from src.task.models import Task, Solution, TierStatus
+from src.user.models import AuthorizedUsers
 
 
 class SolutionModelTest(TestCase):
+
+    def setUp(self) -> None:
+        AuthorizedUsers.objects.create(tg_username='@username1')
+        AuthorizedUsers.objects.create(tg_username='@username2')
+        AuthorizedUsers.objects.create(tg_username='@username3')
+
     def test_solution_creation(self):
         user = get_user_model().objects.create_user(
             username='testuser',
@@ -52,9 +59,7 @@ class SolutionModelTest(TestCase):
         )
 
         self.assertEqual(user.points_count,
-                         initial_user_points_count+task.points + 5)
+                         initial_user_points_count + task.points + 5)
         self.assertEqual(user.tasks_count, initial_user_tasks_count + 1)
         self.assertEqual(solution.points_earned, task.points + 5)
         self.assertEqual(task.points, 50)
-
-        
