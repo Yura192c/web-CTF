@@ -1,10 +1,16 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from src.task.models import Task, TierStatus
+from src.user.models import AuthorizedUsers
 
 
 class TaskModelTest(TestCase):
-    def setUp(self):
+
+    def setUp(self) -> None:
+        AuthorizedUsers.objects.create(tg_username='@username1')
+        AuthorizedUsers.objects.create(tg_username='@username2')
+        AuthorizedUsers.objects.create(tg_username='@username3')
+
         self.user = get_user_model().objects.create_user(
             username='testuser',
             password='testpassword',

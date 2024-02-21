@@ -1,7 +1,15 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from src.user.models import AuthorizedUsers
+
 
 class UserModelTest(TestCase):
+
+    def setUp(self) -> None:
+        AuthorizedUsers.objects.create(tg_username='@username1')
+        AuthorizedUsers.objects.create(tg_username='@username2')
+        AuthorizedUsers.objects.create(tg_username='@username3')
+
     def test_create_user(self):
         user = get_user_model().objects.create_user(
             username='testuser',
@@ -18,7 +26,7 @@ class UserModelTest(TestCase):
             username='adminuser',
             telegram_username='@username1',
             password='adminpassword'
-            
+
         )
         self.assertTrue(admin_user.is_staff)
         self.assertTrue(admin_user.is_superuser)
