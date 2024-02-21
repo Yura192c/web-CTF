@@ -37,7 +37,7 @@ jobs:
           pipenv install --deploy --dev
           
     - name: Set DJANGO_SETTINGS_MODULE
-      run: echo "export DJANGO_SETTINGS_MODULE=<ваше_значение>" >> $GITHUB_ENV
+      run: echo "export DJANGO_SETTINGS_MODULE=<config.settings.development>" >> $GITHUB_ENV
       
     - name: Execute the tests
       run: |
